@@ -6,14 +6,13 @@
  */
 const User = require('../db').User;
 module.exports = {
-    //save测试
+    //save test
     async saveUsers(ctx, next){
         console.log('sss',ctx.request.body)
         let { user_name = '', user_id = '' } = ctx.request.body; 
         try {
             let user = new User({user_name, user_id});
             let res = await user.save();
-            //if(res.)
             if(res._id != null){
                     ctx.body = {
                     code: 200,
@@ -24,7 +23,6 @@ module.exports = {
                     }
                 }
             }
-            console.log('你看看',res)
         } catch (error) {
             console.log('error==',error);
             ctx.body = {
