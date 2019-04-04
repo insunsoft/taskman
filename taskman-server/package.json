@@ -4,7 +4,7 @@
     "description": "taskman-server",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js"
+        "start": "node bin/server"
     },
     "keywords": [
         "koa",
@@ -17,9 +17,14 @@
         "url": "https://github.com/fikyair/taskman-server.git"
     },
     "dependencies": {
+        "jsonwebtoken": "^8.5.1",
         "koa": "^2.7.0",
         "koa-bodyparser": "^4.2.1",
+        "koa-json": "^2.0.2",
+        "koa-logger": "^3.2.0",
+        "koa-onerror": "^4.1.0",
         "koa-router": "^7.4.0",
+        "koa-static": "^5.0.0",
         "koa2-cors": "^2.0.6",
         "mime": "^2.4.0",
         "mongoose": "^5.4.21",
