@@ -1,0 +1,6 @@
+<view class="cu-card padding flex flex-direction">
+    
+    <button class='cu-btn bg-red lg margin-bottom-xl' open-type='getUserInfo' disabled='{{agreeBtn}}' bindgetuserinfo='onGotUserInfo'>点击授权</button>
+
+
+</view>

@@ -1,0 +1,6 @@
+{
+    "usingComponents": {
+        "wux-popover": "../../dist/popover/index",
+        "wux-progress": "../../dist/progress/index"
+    }
+}

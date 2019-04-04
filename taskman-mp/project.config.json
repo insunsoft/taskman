@@ -1,0 +1,78 @@
+{
+	"miniprogramRoot": "miniprogram/",
+	"cloudfunctionRoot": "cloudfunctions/",
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true,
+		"autoAudits": false
+	},
+	"appid": "wx496b8304e5ad1384",
+	"projectname": "TaskMan",
+	"libVersion": "2.6.4",
+	"compileType": "miniprogram",
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 5,
+			"list": [
+				{
+					"id": -1,
+					"name": "db guide",
+					"pathName": "pages/databaseGuide/databaseGuide",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "详情",
+					"pathName": "pages/detailTasks/detailTasks",
+					"query": "id=XH4jQ4nnuWjciycl",
+					"scene": null
+				},
+				{
+					"id": 2,
+					"name": "邀请页面",
+					"pathName": "pages/inviteFren/inviteFren",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "邀请页面",
+					"pathName": "pages/sonTasks/sonTasks",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "子任务页面",
+					"pathName": "pages/sonTasks/sonTasks",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "详情页ui",
+					"pathName": "pages/editTasks/editTasks",
+					"scene": null
+				}
+			]
+		}
+	}
+}

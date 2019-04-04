@@ -1,0 +1,7 @@
+{
+    "navigationBarTitleText": "任务详情",
+    "usingComponents": {
+        "wux-popover": "../../dist/popover/index",
+        "wux-progress": "../../dist/progress/index"
+    }
+}

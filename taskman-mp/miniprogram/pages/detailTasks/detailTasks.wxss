@@ -1,0 +1,20 @@
+/* miniprogram/pages/detailTasks/detailTasks.wxss */
+.taks-count{
+    position: relative;
+    right: -69%;
+}
+.user-avatar{
+    height: 40rpx;
+    width: 40rpx;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.foot-btn-height{
+    height: 128rpx;
+}
+.progress-bottom{
+    height: 286rpx;
+}
+.margin-list{
+    margin: 7rpx
+}

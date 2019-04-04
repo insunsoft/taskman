@@ -1,0 +1,229 @@
+<!--miniprogram/pages/editTasks/editTasks.wxml-->
+<view wx:if='{{hasFather==true}}'>
+        <navigator
+            url="../detailTasks/detailTasks?id={{fatherTasks[0]._id}}"
+            open-type="redirect"
+            >
+            <view class="cu-list menu list-menu">
+                <view class="cu-item">
+                        <text class='icon-stop text-sm'></text>
+                        <text class='text-grey text-sm'>{{fatherTasks[0].task_name}}</text>
+                </view>
+            </view>
+        </navigator>
+</view>
+
+<view wx:elif="{{hasFather==false}}">
+    
+</view>
+<form bindsubmit="formSubmitDetail">
+	<view class='cu-card case bg-white margin padding'>
+		<view class="cu-bar bg-white solid-bottom">
+			<view class="cu-bar justify-center bg-white">
+				<view class='action sub-title'>
+					<text class='text-m text-bold text-cyan'>任务名称</text>
+					<text class='bg-cyan' style='width:2rem'/>
+
+
+            </view>
+			</view>
+		</view>
+		<view class="cu-form-group">
+			<input
+			 placeholder="任务名称"
+			 class='radius text-xl text-black'
+			 style="margin-top: 8rpx; margin-left: 10rpx;"
+			 name='task_name'
+			 value='{{filterList.task_name}}'
+			/>
+		</view>
+		<view class="cu-bar bg-white solid-bottom">
+			<view class="cu-bar justify-center bg-white">
+				<view class='action sub-title'>
+					<text class='text-m text-bold text-cyan'>任务详情
+</text>
+					<text class='bg-cyan' style='width:2rem'/>
+
+
+            </view>
+			</view>
+		</view>
+		<view class="cu-form-group">
+			<input
+			 placeholder="描述一下吧"
+			 class='radius text-xl text-black'
+			 name='task_details'
+			 value='{{filterList.task_details}}'
+			/>
+		</view>
+		<view class="cu-bar bg-white solid-bottom">
+			<view class="cu-bar justify-center bg-white">
+				<view class='action sub-title'>
+					<text class='text-m text-bold text-cyan'>截止日期
+</text>
+					<text class='bg-cyan' style='width:2rem'/>
+
+
+            </view>
+			</view>
+		</view>
+		<view class="cu-form-group">
+			<picker
+			 mode="date"
+			 value="{{task_date}}"
+			 bindchange="bindDateChange"
+			 style="margin-left: 10rpx;"
+			>
+				<view class="picker text-xl text-black">
+					{{task_date?task_date:'请选择'}}
+				</view>
+			</picker>
+		</view>
+		<view class="cu-bar bg-white solid-bottom">
+			<view class="cu-bar justify-center bg-white">
+				<view class='action sub-title'>
+					<text class='text-m text-bold text-cyan'>指派人
+</text>
+					<text class='bg-cyan' style='width:2rem'/>
+
+
+            </view>
+			</view>
+		</view>
+		<view class="cu-form-group">
+			<view class="user-avatar sm" bindtap='inviteFriends' wx:if='{{filterList.task_person==null}}'>
+				<view class='cu-avatar round sm text-grey' style='background-image: url(https://image.weilanwl.com/img/square-1.jpg)' />
+			</view>
+			<view class="user-avatar sm" bindtap='inviteFriends' wx:else>
+				<view class='cu-avatar round sm text-grey' style='background-image: url({{filterList.task_personavater}})' />
+			</view>
+		</view>
+</view>
+
+<view class='margin'>
+	<Text class='icon-titles text-green'/>
+
+	<Text class='text-m text-bold'>
+        子任务列表
+    
+</Text>
+				</view>
+
+				<!-- 子任务
+<view class="cu-list menu margin-top card-menu">
+        <view class="cu-item arrow">
+          <navigator class='content' url='../sonTasks/sonTasks' open-type="redirect">
+            <text class='icon-form text-cyan'></text>
+            <text class='text-grey'>完成文档撰写</text>
+          </navigator>
+        </view>
+
+        <view class="cu-item arrow">
+          <navigator class='content' url='../sonTasks/sonTasks' open-type="redirect">
+            <text class='icon-form text-cyan'></text>
+            <text class='text-grey'>上传实战代码</text>
+          </navigator>
+        </view>
+</view>
+
+-->
+
+				<!-- 判断子任务 -->
+				<view wx:if='{{hasSon==true}}'>
+					<navigator
+					 url="../detailTasks/detailTasks?id={{item._id}}"
+					 open-type="redirect"
+					 wx:for="{{sonTasks}}"
+					 wx:for-index="idx"
+					 wx:for-item="item"
+					>
+						<view class="cu-list menu list-menu card-menu">
+							<view class="cu-item arrow">
+								<button class='cu-btn content' bindtap=''>
+									<text class='icon-notice text-sm'></text>
+					                <text class='text-m text-black'>{{item.task_name}}</text>
+									<text class='text-m'>({{item.son_Tasks_Count?item.son_Tasks_Count:"0"}})</text>
+								</button>
+							</view>
+						</view>
+					</navigator>
+				</view>
+
+				<view wx:if='{{hasSon==false}}' />
+
+				<!-- 进度条-->
+				<view class="cu-list ">
+					<view class="cu-item" style="padding: 0 7rpx;">
+						<view class='content padding-tb-sm'>
+							<view>
+								<text class='icon-titles text-green text-xl'> 任务进度(%)</text>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view wx:if='{{haSonTag===false}}' class="cu-list menu margin-lg">
+					<view class="section section_gap card-menu ">
+						<view class="body-view">
+							<input
+							 placeholder="请填写进度"
+							 class='radius text-xl text-black'
+							 name='task_progress'
+							 value='{{filterList.task_progress*100}}'
+							/>
+						</view>
+					</view>
+				</view>
+				<view wx:else='{{haSonTag===true}}' class=" menu margin-lg">
+					<wux-progress background-color="#f3f3f3" percent="{{ filterList.task_progress*100 }}" />
+					{{filterList.task_progress*100}}%
+				</view>
+
+				<view wx:if='{{haSonTag===false}}' class="foot flex flex-direction" style="bottom: 0; position: fixed; z-index: 1024; width: 100%;">
+					<view class="grid col-3 ">
+						<button class=' cu-btn bg-grey lg ' style='border-radius: 0; width: 33%;' bindtap='addSonTasks'>添加子任务</button>
+						<button class=' cu-btn bg-grey lg' style='border-radius: 0; width: 33%;' form-type="submit">完成</button>
+						<button class=' cu-btn bg-grey lg' style='border-radius: 0; width: 34%;' bindtap='deleteTasks'>删除任务</button>
+					</view>
+				</view>
+				<view wx:else class="foot flex flex-direction" style="bottom: 0; position: fixed; z-index: 1024; width: 100%;">
+					<view>
+						<button class=' cu-btn bg-grey lg ' style='border-radius: 0; width: 50%;' bindtap='addSonTasks'>添加子任务</button>
+						<button class=' cu-btn bg-grey lg' style='border-radius: 0; width: 50%;' form-type="submit">完成</button>
+					</view>
+				</view>
+</form>
+
+<view class="cu-modal {{closeModalShow?'show':''}}">
+	<view class='cu-dialog'>
+		<view class='cu-bar bg-white justify-end'>
+			<view class='content'>添加子任务</view>
+			<view class='action'>
+				<text class='icon-close Text-red' bindtap='addTaskX'></text>
+                </view>
+			</view>
+			<form bindsubmit="formSubmitSonTask">
+                <input placeholder="子任务名称" class='radius' name='task_name' value='{{valueSonTasksInput}}'></input>
+				<view class='cu-bar bg-white justify-end'>
+					<view class='action'>
+						<button class='cu-btn line-green text-green' bindtap='addTaskCancel'>取消</button>
+						<button class='cu-btn bg-green margin-left' form-type="submit">确定</button>
+					</view>
+				</view>
+			</form>
+		</view>
+</view>
+
+<view class="cu-modal {{inviteModal?'show':''}}">
+    <view class="cu-dialog">
+        <view class="cu-bar bg-white justify-end">
+            <view class='content'>提示</view>
+            <view class='action' bindtap='hideInviteModal'>
+                <text class='icon-close text-red'></text>
+            </view>
+        </view>
+		<view class='padding-0'>
+			<button open-type='share' class='text-black bg-white' bindtap='inviteFriendBtn'>邀请微信好友</button>
+		</view>
+   </view>
+</view>
+
