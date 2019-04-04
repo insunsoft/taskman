@@ -95,8 +95,12 @@ Page({
   onLoad: function() {
 
     wx.request({
-        url: 'http://localhost:3000/getJson', // 仅为示例，并非真实的接口地址
-        data: {},
+        url: 'http://localhost:9981/api/user', // 仅为示例，并非真实的接口地址
+        data: {
+            user_name: 'xsm',
+            user_id : '123'
+        },
+        method: 'POST',
         header: {
           'content-type': 'application/json' // 默认值
         },
