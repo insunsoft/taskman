@@ -1,8 +1,8 @@
 /*
  * @Author: liho xue
- * @LastEditors: Do not edit
+ * @LastEditors: niho xue
  * @since: 2019-04-03 17:09:46
- * @LastEditTime: 2019-04-04 10:18:27
+ * @LastEditTime: 2019-04-08 11:30:41
  */
 const mongoose = require('mongoose');
 const db = mongoose.connect("mongodb://localhost:27017/test", { useNewUrlParser:true }, function(err){
@@ -18,7 +18,19 @@ const Schema = mongoose.Schema;
 //用户
 let userSchema = new Schema({
     user_name: String,
-    user_id: String,
 })
 
+//任务列表
+let TaskSchema = new Schema({
+    _openid: String,
+    has_pTasks: Boolean,
+    has_tasks: Boolean,
+    task_details: String,
+    task_name: String,
+    task_progress: Number,
+    task_time: Date
+})
+
+
 exports.User = mongoose.model('User', userSchema);
+exports.Tasks = mongoose.model('Tasks', TaskSchema);

@@ -1,14 +1,14 @@
 /*
  * @Author: liho xue
- * @LastEditors: Do not edit
+ * @LastEditors: niho xue
  * @since: 2019-04-04 10:26:01
- * @LastEditTime: 2019-04-04 10:26:48
+ * @LastEditTime: 2019-04-08 11:29:17
  */
 const User = require('../db').User;
 module.exports = {
     //save test
     async saveUsers(ctx, next){
-        console.log('sss',ctx.request.body)
+        //console.log('sss',ctx.request.body)   { user_name: 'xsm' }
         let { user_name = '', user_id = '' } = ctx.request.body; 
         try {
             let user = new User({user_name, user_id});

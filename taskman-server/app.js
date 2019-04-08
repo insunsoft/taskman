@@ -4,7 +4,7 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
-const {check_token} = require('./utils/token')
+//const {check_token} = require('./utils/token') 暂且不需要验证
 
 // error handler
 onerror(app)
@@ -17,8 +17,8 @@ app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
-// 添加token 验证中间件
-app.use(check_token);
+// 添加token 验证中间件 暂且不需要验证
+// app.use(check_token);
 
 // logger
 app.use(async (ctx, next) => {

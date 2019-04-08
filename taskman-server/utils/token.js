@@ -1,14 +1,15 @@
 /*
- * @Author: Pawn 
- * @Date: 2018-09-11 21:08:33 
- * @Last Modified by: Pawn
- * @Last Modified time: 2018-09-19 20:44:43
+ * @Author: niho xue
+ * @LastEditors: niho xue
+ * @Date: 2019-04-04 17:44:17
+ * @LastEditTime: 2019-04-08 13:47:17
  */
 
 const jwt = require('jsonwebtoken');
 const {TOKEN_ENCODE_STR, URL_YES_PASS} = require('./config');
 const Checkcode = require('../db').Checkcode;
 const User = require('../db').User
+const Tasks = require('../db').Tasks
 
 module.exports = {
   // 生成登录 token

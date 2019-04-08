@@ -6,7 +6,9 @@
  */
 //API分发器
 const user = require('./user');
+const tasks = require('./tasks')
 
 module.exports = {
-    user
+    user,
+    tasks
 }
