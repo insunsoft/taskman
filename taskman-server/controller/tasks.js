@@ -2,11 +2,13 @@
  * @Author: niho xue
  * @LastEditors: niho xue
  * @Date: 2019-04-08 10:27:53
- * @LastEditTime: 2019-04-08 13:51:05
+ * @LastEditTime: 2019-04-08 16:00:04
  */
 const Tasks = require('../db').Tasks;
 
 module.exports = {
+
+    //新增任务
     async addTasks(ctx, next){
 
         let { task_name = '', has_pTasks = false, has_tasks = false, task_progress = 0 } = ctx.request.body;
@@ -33,5 +35,9 @@ module.exports = {
                 msg:'任务新建失败，服务器异常'
             }
         }
+    },
+    //查询任务
+    async getTasks(ctx, next) {
+        //let { }
     }
 }
