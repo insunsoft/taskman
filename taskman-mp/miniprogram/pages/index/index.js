@@ -1,6 +1,6 @@
 //index.js
 const app = getApp()
-
+const promisify = require('../../utils/promisify');
 Page({
   data: {
     avatarUrl: './user-unlogin.png',
@@ -132,22 +132,6 @@ Page({
   },
   onLoad: function() {
 
-    wx.request({
-        url: 'http://localhost:9981/api/user', // 仅为示例，并非真实的接口地址
-        data: {
-            user_name: 'xsm',
-        },
-        method: 'POST',
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        success(res) {
-          console.log('node-koa2',res)
-        }
-      })
-
-
-
     const date = new Date();
     const currDate = date.toLocaleDateString();
     let that = this;
@@ -173,24 +157,30 @@ Page({
     //获取任务列表  需要优化最多一次取 100 条
     const db = wx.cloud.database()
     console.log(this.data.userInfo)
-    // db.collection('tasks-list').where({
-    // })
-    //   .get({
-    //     success:(res)=> {
-    //       // res.data 是包含以上定义的两条记录的数组
-    //       console.log("=--=>",res.data)
-    //       const { data: tasksData } = res;
-         
-    //       tasksData.map((item)=>{
-    //          item.time_start = item.time_start.substring(0,11)
-    //       })
-    //       this.setData({
-    //         tasksData: res.data
-    //       },()=>{
-    //            console.log("tasksData",this.data.tasksData)
-    //       })
-    //     }
-    //   })
+    wx.login({
+        success: function(res) {
+          var code = res.code;
+          if (code) {
+            promisify(wx.request)({
+                url: 'http://localhost:9981/api/login',
+                data: { code: code },
+                method: 'POST',
+            }).then( res => {
+                const { openid } = res.data.data;
+                console.log('openid', openid)
+                // 查询当前openId下的所有小任务
+                // promisify()({
+
+                // })
+            }).catch( res => {
+                console.log('异常信息', res)
+            })
+          } else {
+            console.log('获取用户登录态失败：' + res.errMsg);
+          }
+        }
+      });
+
     wx.cloud.callFunction({
         name: 'login',
         success: res => {

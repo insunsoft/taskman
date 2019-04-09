@@ -2,7 +2,7 @@
  * @Author: liho xue
  * @LastEditors: niho xue
  * @since: 2019-04-04 10:26:01
- * @LastEditTime: 2019-04-09 15:12:47
+ * @LastEditTime: 2019-04-09 15:34:29
  */
 const User = require('../db').User;
 const Session = require('../db').Session;
@@ -54,7 +54,7 @@ module.exports = {
                                                             .update('data.session_key')
                                                             .update('data.openid')
                                                             .digest('hex');
-                            let session = new Session({ sessionid: md5skey })
+                            let session = new Session({ sessionid: md5skey, openid: data.openid })
                             let res = session.save(); //存到了mongodb中也可使用redis  
                             return resolve(res)
                           } else {

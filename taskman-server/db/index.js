@@ -2,7 +2,7 @@
  * @Author: liho xue
  * @LastEditors: niho xue
  * @since: 2019-04-03 17:09:46
- * @LastEditTime: 2019-04-08 17:27:18
+ * @LastEditTime: 2019-04-09 15:46:29
  */
 const mongoose = require('mongoose');
 const db = mongoose.connect("mongodb://localhost:27017/test", { useNewUrlParser:true }, function(err){
@@ -34,6 +34,7 @@ let TaskSchema = new Schema({
 //sessionid存储
 let SessionSchema = new Schema({
     sessionid: String,
+    openid: String
 })
 
 exports.User = mongoose.model('User', userSchema);
