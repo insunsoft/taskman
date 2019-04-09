@@ -2,7 +2,7 @@
  * @Author: niho xue
  * @LastEditors: niho xue
  * @Date: 2019-04-08 10:27:53
- * @LastEditTime: 2019-04-08 16:00:04
+ * @LastEditTime: 2019-04-09 18:08:00
  */
 const Tasks = require('../db').Tasks;
 
@@ -25,6 +25,7 @@ module.exports = {
                     has_pTasks: res.has_pTasks,
                     has_tasks: res.has_tasks,
                     task_progress: res.task_progress,
+                    _openid: res._openid
                 }
             }
         }
@@ -38,6 +39,8 @@ module.exports = {
     },
     //查询任务
     async getTasks(ctx, next) {
-        //let { }
+        ctx.body = {
+            code: 200
+        }
     }
 }
