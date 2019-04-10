@@ -23,6 +23,7 @@ Page({
     dayTime: '',
     isIPXr: app.globalData.isIPXr,
     isIOS: app.globalData.isIOS,
+    _openid: ''
   },
   tabSelect(e) {
     const taskStyle = e.currentTarget.dataset.id === 0 ? false : true;
@@ -92,8 +93,9 @@ Page({
                         has_pTasks: false,
                         has_tasks: true,//默认有子任务
                         task_progress: 0,
-                        //task_time: null, 插入时不会报错
-                        //task_task_person: '' 插入时不会报错
+                        _openid: this.data._openid,
+                        task_time: null, //插入时不会报错
+                        task_person: '' //插入时不会报错
                 },
                 method: 'POST',
                 header: {
@@ -164,14 +166,31 @@ Page({
             promisify(wx.request)({
                 url: 'http://localhost:9981/api/login',
                 data: { code: code },
-                method: 'POST',
+                method: 'POST'
             }).then( res => {
-                const { openid } = res.data.data;
-                console.log('openid', openid)
+                const { _openid } = res.data.data;
+                that.setData({
+                    _openid: _openid,
+                })
                 // 查询当前openId下的所有小任务
-                // promisify()({
+                promisify(wx.request)({
+                    url: `http://localhost:9981/api/gettasks?_openid=${_openid}`,
+                    method: 'GET'
+                }).then( res => {
+                    const { data: tasksData } = res.data;
+                    console.log('res===>', res)
 
-                // })
+                    tasksData.map((item)=>{
+                        item.task_time = item.task_time?item.task_time.substring(0,10):null;
+                    })
+                    // 按进度大小排序
+                    let tasksDataT = tasksData.sort((x, y) => {
+                        return x.task_progress - y.task_progress;
+                    })
+                    that.setData({
+                        tasksData: tasksDataT
+                    })
+                })
             }).catch( res => {
                 console.log('异常信息', res)
             })
@@ -181,42 +200,44 @@ Page({
         }
       });
 
-    wx.cloud.callFunction({
-        name: 'login',
-        success: res => {
-          this.setData({
-              openId: res.result.openid
-          })
-          console.log(this.data.openId)
-          wx.cloud.callFunction({
-            name: 'queryTasks',
-            data: {
-                _openid:  this.data.openId,
-            },
-            success: res => {
-              console.log('成功信息: ', res)
-              const { data: tasksData } = res.result;
-                tasksData.map((item)=>{
-                    item.task_time = item.task_time?item.task_time.substring(0,10):null;
-                })
-                // 按进度大小排序
-                let tasksDataT = tasksData.sort((x, y) => {
-                    console.log('ss')
-                    return x.task_progress - y.task_progress;
-                })
-                this.setData({
-                    tasksData: tasksDataT
-                })
-            },
-            fail: err => {
-                console.log('失败信息', err)
-            },
-          })
-        },
-        fail: err => {
+    // wx.cloud.callFunction({
+    //     name: 'login',
+    //     success: res => {
+    //       this.setData({
+    //           openId: res.result.openid
+    //       })
+    //       console.log(this.data.openId)
+    //       wx.cloud.callFunction({
+    //         name: 'queryTasks',
+    //         data: {
+    //             _openid:  this.data.openId,
+    //         },
+    //         success: res => {
+    //           console.log('成功信息: ', res)
+    //           const { data: tasksData } = res.result;
+    //             tasksData.map((item)=>{
+    //                 item.task_time = item.task_time?item.task_time.substring(0,10):null;
+    //             })
+    //             // 按进度大小排序
+    //             let tasksDataT = tasksData.sort((x, y) => {
+    //                 console.log('ss')
+    //                 return x.task_progress - y.task_progress;
+    //             })
+    //             this.setData({
+    //                 tasksData: tasksDataT
+    //             })
+    //         },
+    //         fail: err => {
+    //             console.log('失败信息', err)
+    //         },
+    //       })
+    //     },
+    //     fail: err => {
           
-        }
-    })
+    //     }
+    // })
+
+
     //   db.collection('tasks-list').get().then(res => {
     //     // res.data 是一个包含集合中有权限访问的所有记录的数据，不超过 20 条
     //     // 查询 task_sender == 当前openid   task_receive == 当前openid
