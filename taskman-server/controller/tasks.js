@@ -2,7 +2,7 @@
  * @Author: niho xue
  * @LastEditors: niho xue
  * @Date: 2019-04-08 10:27:53
- * @LastEditTime: 2019-04-10 14:54:58
+ * @LastEditTime: 2019-04-10 15:49:40
  */
 const Tasks = require('../db').Tasks;
 
@@ -47,6 +47,25 @@ module.exports = {
         //console.log('res',res);
         try {
             let res = await Tasks.find({_openid: _openid });
+            ctx.body = {
+              code: 200,
+              msg: '查询成功！',
+              data: res
+            }
+          }catch(e){
+            console.log(e);
+            ctx.body = {
+              code: 500,
+              msg: '查询失败，服务器异常，请稍后再试!'
+            }
+        }
+    },
+    //按_id查询任务
+    async getTasksById(ctx, next) {
+        let { task_id = '' } = ctx.query;
+        console.log("id,,,",task_id)
+        try {
+            let res = await Tasks.find({_id: task_id });
             ctx.body = {
               code: 200,
               msg: '查询成功！',
