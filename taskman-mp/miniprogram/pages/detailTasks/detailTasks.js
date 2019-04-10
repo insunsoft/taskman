@@ -1,5 +1,6 @@
 // miniprogram/pages/detailTasks/detailTasks.js
 const app = getApp()
+const promisify = require('../../utils/promisify');
 
 Page({
 
@@ -84,74 +85,154 @@ Page({
   },
   onAllTasks: function () {
     // 调用云函数
-    wx.cloud.callFunction({
-      name: 'queryAllTasks',
-      data: {},
-      success: res => {
-        console.log('所有数据: ', res.result.data)
+    console.log("这条数据的id",this.data.taskId);
+    promisify(wx.request)({
+        url: `http://localhost:9981/api/getTasksById?task_id=${this.data.taskId}`,
+        method: 'GET'
+    }).then( res => {
+        
+        console.log('所有数据: ', res.data.data)
         this.setData({
-          listData: res.result.data
+            filterList: res.data.data[0]
         })
         //查找子节点
-        let { listData, taskId, sonTasks, fatherTasks } = this.data;
-        if(listData.length!==0){
-            const filterList = listData.filter(item => item._id === taskId);
-            console.log('本条: ', filterList)
+        //let { listData, taskId, sonTasks, fatherTasks } = this.data;
+        // if(listData.length!==0){
+        //     const filterList = listData.filter(item => item._id === taskId);
+        //     console.log('本条: ', filterList)
 
-            const date = filterList[0].task_time?filterList[0].task_time.substring(0,10):null
-            this.setData({
-                filterList: filterList[0],
-                task_date: date,
-            })
+        //     const date = filterList[0].task_time?filterList[0].task_time.substring(0,10):null
+        //     this.setData({
+        //         filterList: filterList[0],
+        //         task_date: date,
+        //     })
 
-            console.log('data',this.data.filterList);
+        //     console.log('data',this.data.filterList);
 
-            const filter_id = this.data.filterList._id;
-            sonTasks.splice(0,sonTasks.length);//在赋值之前清空所有元素
-            listData.map(item => {
-            if (item.has_pTasks && item.parent_id === filter_id){
+        //     const filter_id = this.data.filterList._id;
+        //     sonTasks.splice(0,sonTasks.length);//在赋值之前清空所有元素
+        //     listData.map(item => {
+        //     if (item.has_pTasks && item.parent_id === filter_id){
 
-                sonTasks.push(item)
-            }
-            })
+        //         sonTasks.push(item)
+        //     }
+        //     })
 
-                //查找父节点
-            const filter_parentId = this.data.filterList.parent_id;
-            listData.map(item => {
-                if(item.has_tasks && item._id === filter_parentId){
-                    fatherTasks.push(item)
-                }
-            })
-            //查找子节点"下一级 "拥有的节点个数
+        //         //查找父节点
+        //     const filter_parentId = this.data.filterList.parent_id;
+        //     listData.map(item => {
+        //         if(item.has_tasks && item._id === filter_parentId){
+        //             fatherTasks.push(item)
+        //         }
+        //     })
+        //     //查找子节点"下一级 "拥有的节点个数
 
-            this.setData({
-                sonTasks: sonTasks,
-                //sonTasksCount: '',
-                hasSon: sonTasks.length>0?true:false,
-                fatherTasks: fatherTasks,
-                hasFather: fatherTasks.length>0?true: false,
-            })
+        //     this.setData({
+        //         sonTasks: sonTasks,
+        //         //sonTasksCount: '',
+        //         hasSon: sonTasks.length>0?true:false,
+        //         fatherTasks: fatherTasks,
+        //         hasFather: fatherTasks.length>0?true: false,
+        //     })
              
-            //隐藏删除按钮和任务进度
-            if(this.data.sonTasks.length>0){
+        //     //隐藏删除按钮和任务进度
+        //     if(this.data.sonTasks.length>0){
                 
-                this.setData({
-                    haSonTag: true
-                })
-            }else{
-                this.setData({
-                    haSonTag: false
-                })
-            }
+        //         this.setData({
+        //             haSonTag: true
+        //         })
+        //     }else{
+        //         this.setData({
+        //             haSonTag: false
+        //         })
+        //     }
 
-        }
-        //console.log("子任务数",this.data.sonTasksCount)
-      },
-      fail: err => {
-        console.error('调用失败', err)
-      }
+        // }
     })
-  },
+    // wx.cloud.callFunction({
+    //   name: 'queryAllTasks',
+    //   data: {},
+    //   success: res => {
+    //     console.log('所有数据: ', res.result.data)
+    //     this.setData({
+    //       listData: res.result.data
+    //     })
+    //     //查找子节点
+    //     let { listData, taskId, sonTasks, fatherTasks } = this.data;
+    //     if(listData.length!==0){
+    //         const filterList = listData.filter(item => item._id === taskId);
+    //         console.log('本条: ', filterList)
+
+    //         const date = filterList[0].task_time?filterList[0].task_time.substring(0,10):null
+    //         this.setData({
+    //             filterList: filterList[0],
+    //             task_date: date,
+    //         })
+
+    //         console.log('data',this.data.filterList);
+
+    //         const filter_id = this.data.filterList._id;
+    //         sonTasks.splice(0,sonTasks.length);//在赋值之前清空所有元素
+    //         listData.map(item => {
+    //         if (item.has_pTasks && item.parent_id === filter_id){
+
+    //             sonTasks.push(item)
+    //         }
+    //         })
+
+    //             //查找父节点
+    //         const filter_parentId = this.data.filterList.parent_id;
+    //         listData.map(item => {
+    //             if(item.has_tasks && item._id === filter_parentId){
+    //                 fatherTasks.push(item)
+    //             }
+    //         })
+    //         //查找子节点"下一级 "拥有的节点个数
+
+    //         this.setData({
+    //             sonTasks: sonTasks,
+    //             //sonTasksCount: '',
+    //             hasSon: sonTasks.length>0?true:false,
+    //             fatherTasks: fatherTasks,
+    //             hasFather: fatherTasks.length>0?true: false,
+    //         })
+             
+    //         //隐藏删除按钮和任务进度
+    //         if(this.data.sonTasks.length>0){
+                
+    //             this.setData({
+    //                 haSonTag: true
+    //             })
+    //         }else{
+    //             this.setData({
+    //                 haSonTag: false
+    //             })
+    //         }
+
+    //     }
+    //     //console.log("子任务数",this.data.sonTasksCount)
+    //   },
+    //   fail: err => {
+    //     console.error('调用失败', err)
+    //   }
+    // })
+        // 使用云函数按_id tasks， 但发现调如详情页面时，还是有些许延迟
+        // console.log("---id",this.data.taskId)
+        // wx.cloud.callFunction({
+        //     name: 'getTaskById',
+        //     data: { _id: this.data.taskId},
+        //     success: res=> {
+        //         console.log("res-----",res)
+        //         this.setData({
+        //                     filterList: res.result.data[0],
+        //                     //task_date: date,
+        //         })
+        //         console.log("filterList",this.data.filterList)
+
+        //     }
+        // })
+   }
+  ,
   hide() {
         this.setData({
             visible: false,
