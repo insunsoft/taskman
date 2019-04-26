@@ -1,0 +1,19 @@
+<cover-view class="modal_container_bottom" hidden='{{modalBottomHidden}}'>
+	<cover-view class="picker_modal bottom_pos" animation="{{animation}}">
+		<cover-view class="cover_top">
+			<cover-view class="cover_text">
+				注：数据分享之后，不受权限控制，请注意你的数据安全
+			</cover-view>
+			<cover-view class="cover_img">
+				<cover-image class="img_class" src="../../images/weixin.png" />
+				<cover-image class="img_class" src="../../images/friend.png" />
+			</cover-view>
+		</cover-view>
+		<cover-view class="cover_bottom_bg" bindtap="closeShare">
+			<cover-view class="cover_bottom">
+				取消
+			</cover-view>
+		</cover-view>
+	</cover-view>
+</cover-view>
+
