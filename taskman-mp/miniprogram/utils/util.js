@@ -1,4 +1,3 @@
-import * as echarts from '../ec-canvas/echarts';
 import moment from './moment';
 
 let chart = [];
@@ -97,46 +96,6 @@ const getNearOneYears = (val = 1) => {
     date.push(start)
     date.push(end)
     return date
-}
-
-// 初始化echart
-const initChart = (canvas, width, height, option, index, drill, drillCallback) => {
-    chart[index] = echarts.init(canvas, null, {
-        width: width,
-        height: height
-    });
-    canvas.setChart(chart[index]);
-    chart[index].setOption(option);
-    if (drill) {
-        chart[index].on('click', params => {
-            drillCallback(params, chart[index])
-        })
-    }
-    return chart[index];
-}
-
-// 格式化图表数据，用于小程序直接展示图表
-const formatChartData = (data, drill, drillCallback) => {
-
-    for (let i = 0; i < data.length; i++) {
-        let contentData = JSON.parse(data[i].content);
-        contentData.startDate = formatDateZh(contentData.startDate)
-        contentData.endDate = formatDateZh(contentData.endDate)
-        data[i].content = contentData
-        if (data[i].content.type === 'CHART') {
-            data[i].content.ec = {
-                onInit: (canvas, width, height) => initChart(canvas, width, height, data[i].content.option, i, drill, drillCallback)
-            }
-        }
-        if (data[i].content.type === 'MORE') {
-            for (let j = 0; j < data[i].content.list.length; j++) {
-                data[i].content.list[j].ec = {
-                    onInit: (canvas, width, height) => initChart(canvas, width, height, data[i].content.list[j].option, j, drill, drillCallback)
-                }
-            }
-        }
-    }
-    return data;
 }
 
 module.exports = {
