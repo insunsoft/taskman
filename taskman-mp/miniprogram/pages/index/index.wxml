@@ -21,56 +21,61 @@
 		 wx:for-index="idx"
 		 wx:for-item="item"
 		>
-                            <view class="cu-list menu ">
-                                <view class="cu-item" style="padding: 0 15rpx;">
-                                    <view class='content padding-tb-sm'>
-                                        <view>
-                                            <text class='icon-titles text-green'></text>
-                                            <text class='text-black'>{{item.task_name}}</text>
-                                        </view>
-                                        <view wx:if='{{item.task_person==null}}'>
-                                            <view class='text-gray text-sm'>
-                                                <text class='icon-time margin'>{{item.task_time?item.task_time:'截止日期'}}</text> 指派人：
-                                                <text class='icon-people cu-avatar round sm'></text>
-                                                <text class=' text-grey margin light'>{{item.task_person?item.task_person:'未指派'}}</text>  
-                                                <text class=' text-grey margin light'>{{item.task_progress*100}}</text>%  
-                                            </view>
-                                        </view>
-                                        <view wx:else>
-                                            <view class='text-gray text-sm'>
-                                                <text class='icon-time margin'>{{item.task_time?item.task_time:'截止日期'}}</text> 指派人：
-                                                <view class='cu-avatar round sm text-grey' style='background-image: url({{item.task_personavater}})' />
-                                                <text class=' text-grey margin light'>{{item.task_person?item.task_person:'未指派'}}</text>  
-                                                <text class=' text-grey margin light'>{{item.task_progress*100}}</text>%  
-                                            </view>
-                                        </view>
-                                    </view>
-                                </view>
-                            </view>
+			<view class="cu-list menu ">
+				<view class="cu-item" style="padding: 0 15rpx;">
+					<view class='content padding-tb-sm'>
+						<view>
+							<text class='icon-titles text-green'/>
+							<text class='text-black'>{{item.task_name}}</text>
+						</view>
+						<view wx:if='{{item.task_person==null}}'>
+							<view class='text-gray text-sm'>
+								<text class='icon-time margin'>{{item.task_time?item.task_time:'截止日期'}}</text>
+								指派人：
+								<text class='icon-people cu-avatar round sm'/>
+								<text class=' text-grey margin light'>{{item.task_person?item.task_person:'未指派'}}</text>
+								<text class=' text-grey margin light'>{{item.task_progress*100}}</text>
+								%
+							</view>
+						</view>
+						<view wx:else>
+							<view class='text-gray text-sm'>
+								<text class='icon-time margin'>{{item.task_time?item.task_time:'截止日期'}}</text>
+								指派人：
+								<view class='cu-avatar round sm text-grey' style='background-image: url({{item.task_personavater}})' />
+								<text class=' text-grey margin light'>{{item.task_person?item.task_person:'未指派'}}</text>
+								<text class=' text-grey margin light'>{{item.task_progress*100}}</text>
+								%
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
 
 		</navigator>
-	<form bindsubmit="formSubmit" >
-		<view class='cu-bar foot input foot-bar'>
-			<input
-			 class='solid-bottom'
-			 placeholder="准备做什么？"
-			 maxlength='300'
-			 value="{{inputTxt}}"
-			 name='input'
-			 cursor-spacing='10'
-			/>
-			<button class='cu-btn line-gray ' form-type="submit">
-				<image class='img-send' src="../../images/send2.png" />
-			</button>
-		</view>
-	</form>
+		<form bindsubmit="formSubmit">
+			<view class='cu-bar foot input foot-bar'>
+				<input
+				 class='solid-bottom'
+				 placeholder="准备做什么？"
+				 maxlength='300'
+				 value="{{inputTxt}}"
+				 name='input'
+				 cursor-spacing='10'
+				/>
+				<button class='cu-btn line-gray ' form-type="submit">
+					<image class='img-send' src="../../images/send2.png" />
+				</button>
+			</view>
+		</form>
 
-	<view class="cu-modal {{modalShow?'show':''}}">
-		<view class='cu-dialog'>
-			<view class='cu-bar bg-white justify-end'>
-				<view class='content'>指派任务</view>
-				<view class='action'>
-					<text class='icon-close Text-red' bindtap='addTaskX'/>
+		<view class="cu-modal {{modalShow?'show':''}}">
+			<view class='cu-dialog'>
+				<view class='cu-bar bg-white justify-end'>
+					<view class='content'>指派任务</view>
+					<view class='action'>
+						<text class='icon-close Text-red' bindtap='addTaskX'/>
+
 
               </view>
 			</view>
