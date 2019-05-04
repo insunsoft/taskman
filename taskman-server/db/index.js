@@ -2,13 +2,13 @@
  * @Author: liho xue
  * @LastEditors: niho xue
  * @since: 2019-04-03 17:09:46
- * @LastEditTime: 2019-04-09 18:27:47
+ * @LastEditTime: 2019-05-04 12:30:12
  */
 const mongoose = require('mongoose');
-const db = mongoose.connect("mongodb://localhost:27017/test", { useNewUrlParser:true }, function(err){
-    if(err){
+const db = mongoose.connect("mongodb://localhost:27017/test", { useNewUrlParser: true }, function (err) {
+    if (err) {
         console.log(err)
-    }else{
+    } else {
         console.log("Connection success!")
     }
 })
