@@ -109,6 +109,4 @@ module.exports = {
     getNearThreeMonth,
     getNearOneYears,
     formatDateZh,
-    formatChartData,
-    initChart,
 }
