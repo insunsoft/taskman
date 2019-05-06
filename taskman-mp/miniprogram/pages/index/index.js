@@ -51,38 +51,6 @@ Page({
         })
     },
     formSubmit: function (e) {
-        //添加任务确定---云开发版
-        // if(e.detail.value.input){
-        //     const db = wx.cloud.database()
-        //     db.collection('tasks-list').add({
-        //       data: {
-        //         task_name: e.detail.value.input,
-        //         has_pTasks: false,
-        //         has_tasks: true,//默认有子任务
-        //         task_progress: 0,
-        //         //task_time: null, 插入时不会报错
-        //         //task_task_person: '' 插入时不会报错
-        //       }
-        //     }).then(res => {
-        //       //console.log(res)
-        //       this.setData({
-        //         inputTxt: '',
-        //       })
-        //       wx.showToast({
-        //         title: '添加成功',
-        //         icon: 'success',
-        //         duration: 2000
-        //       })
-        //       this.onLoad();
-        //     })
-        // }else{
-        //     wx.showToast({
-        //         title: '先要填写任务名称',
-        //         icon: 'none',
-        //         duration: 2000,
-        //         mask: false
-        //       })
-        // }
         //添加任务确定---node.js版本
         if (e.detail.value.input) {
             let that = this;
