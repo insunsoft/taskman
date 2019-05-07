@@ -19,7 +19,8 @@ App({
     isIPXr: false, //当前设备是否为 iPhone Xr
     isIPXsMax: false, //当前设备是否为 iPhone XsMax
     isIOS: false,
-    baseUrl: 'http://localhost:9981'
+    baseUrl: 'http://localhost:9981',
+    _openid: ''
   },
   
   checkIsIPhoneXOrMaxOrXr: function() {

@@ -2,7 +2,7 @@
  * @Author: liho xue
  * @LastEditors: niho xue
  * @since: 2019-04-03 17:09:46
- * @LastEditTime: 2019-05-04 12:30:12
+ * @LastEditTime: 2019-05-07 15:42:40
  */
 const mongoose = require('mongoose');
 const db = mongoose.connect("mongodb://localhost:27017/test", { useNewUrlParser: true }, function (err) {
@@ -28,7 +28,8 @@ let TaskSchema = new Schema({
     task_details: String,
     task_name: String,
     task_progress: Number,
-    task_time: Date
+    task_time: Date,
+    parent_id: String,
 })
 
 //sessionid存储

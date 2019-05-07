@@ -119,6 +119,10 @@ Page({
                         method: 'POST'
                     }).then(res => {
                         const { _openid } = res.data.data;
+                        /**
+                         * 需要优化
+                         */
+                        app.globalData._openid = _openid;
                         this.setData({
                             _openid: _openid,
                         })

@@ -9,4 +9,6 @@ router.get('/', async (ctx, next) => {
     .get('/api/gettasks', controller.tasks.getTasks)
     .get('/api/getTasksById', controller.tasks.getTasksById)
     .post('/api/login', controller.user.login)
+    .post('/api/addSonTask', controller.tasks.addSonTasks)
+    .get('/api/getSonTaskById', controller.tasks.getSonTaskById)
 module.exports = router

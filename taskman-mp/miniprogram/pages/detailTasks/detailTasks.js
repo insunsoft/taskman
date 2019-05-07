@@ -24,7 +24,6 @@ Page({
         sonTasksCount: 0,
         formData: {},
         inviteModal: false,
-        openId: '',
         valueSonTasksInput: '',
         haSonTag: false,
         fatherProgress: 0,
@@ -66,21 +65,8 @@ Page({
         })
         this.onAllTasks();
         //获取openid
-        this.getOpenId();
     },
-    getOpenId: function () {
-        wx.cloud.callFunction({
-            name: 'login',
-            success: res => {
-                this.setData({
-                    openId: res.result.openid
-                })
-            },
-            fail: err => {
-
-            }
-        })
-    },
+    
     onAllTasks: function () {
         const { baseUrl } = this.data
         // 调用云函数
@@ -88,32 +74,11 @@ Page({
             url: `${baseUrl}/api/getTasksById?task_id=${this.data.taskId}`,
             method: 'GET'
         }).then(res => {
-
             this.setData({
                 filterList: res.data.data[0]
             })
-            //查找子节点
-            //let { listData, taskId, sonTasks, fatherTasks } = this.data;
-            // if(listData.length!==0){
-            //     const filterList = listData.filter(item => item._id === taskId);
-            //     console.log('本条: ', filterList)
-
-            //     const date = filterList[0].task_time?filterList[0].task_time.substring(0,10):null
-            //     this.setData({
-            //         filterList: filterList[0],
-            //         task_date: date,
-            //     })
-
-            //     console.log('data',this.data.filterList);
-
-            //     const filter_id = this.data.filterList._id;
-            //     sonTasks.splice(0,sonTasks.length);//在赋值之前清空所有元素
-            //     listData.map(item => {
-            //     if (item.has_pTasks && item.parent_id === filter_id){
-
-            //         sonTasks.push(item)
-            //     }
-            //     })
+            console.log("本条数据", res.data.data[0])
+            // 根据_id查找子任务
 
             //         //查找父节点
             //     const filter_parentId = this.data.filterList.parent_id;
@@ -248,17 +213,22 @@ Page({
         })
     },
     formSubmitSonTask: function (e) {
-        // 添加子任务
+        const { baseUrl } = this.data
+        /**
+         * 添加子任务
+         */
         if (e.detail.value.task_name) {
-            const db = wx.cloud.database()
-            db.collection('tasks-list').add({
+            promisify(wx.request)({
+                url: `${baseUrl}/api/addSonTask`,
                 data: {
                     task_name: e.detail.value.task_name,
                     parent_id: this.data.taskId,
                     has_pTasks: true,
                     has_tasks: true,// 默认是有子任务
-                    task_progress: 0
-                }
+                    task_progress: 0,
+                    _openid: app.globalData._openid,
+                },
+                method: 'POST'
             }).then(res => {
                 this.setData({
                     valueSonTasksInput: '',
@@ -282,19 +252,7 @@ Page({
                     taskId: this.data.taskId,
                 }
             })
-            //当前任务进度重置为0
-            // wx.cloud.callFunction({
-            //     name: 'currentProgress',
-            //     data: {
-            //         taskId: this.data.taskId, 
-            //     },
-            //     success: (res)=>{
-            //         console.log("成功res",res)
-            //     },
-            //     fail: (err)=>{
-            //         console.log("失败res",res)
-            //     }
-            // })
+
             this.onLoad({ id: this.data.taskId })
         } else {
             wx.showToast({
@@ -370,8 +328,9 @@ Page({
         let thisTask_pid = this.data.filterList.parent_id;  //拿到本条数据的父任务的_id
         console.log("过滤的数据", thisTask_pid)
         //while(this.data.parentId){
-        wx.cloud.callFunction({
-            name: 'getParentId',
+        promisify(wx.request)({
+            url: `${baseUrl}/api/getParentId`,
+            method: 'POST',
             data: {
                 thisTask_pid: thisTask_pid,
                 filterList_id: this.data.filterList._id,
@@ -552,7 +511,6 @@ Page({
      */
     onShareAppMessage: function (res, options) {
         console.log('id', this.data.taskId);
-        console.log('task_sender', this.data.openId);
 
         if (res.from === 'button') {
             // 来自页面内转发按钮
