@@ -35,6 +35,7 @@ Page({
         isIPXr: app.globalData.isIPXr,
         isIPXs: app.globalData.isIPXr, //当前设备是否为 iPhone Xs
         isIPXsMax: app.globalData.isIPXr,
+        baseUrl: app.globalData.baseUrl,
         IPAdapt: false,
         parentId: 'ww',
     },
@@ -43,12 +44,9 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        //console.log('~~~',options)
         if (app.globalData.userInfo) {
             this.setData({
                 userInfo: app.globalData.userInfo,
-                //userInfoAnickname: app.globalData.userInfo.nickName,
-                //userInfoAimageurl: app.globalData.userInfo.avatarUrl,
             })
         }
         const { isIPX, isIPXr, isIPXs, isIPXsMax } = this.data;
@@ -84,14 +82,13 @@ Page({
         })
     },
     onAllTasks: function () {
+        const { baseUrl } = this.data
         // 调用云函数
-        console.log("这条数据的id", this.data.taskId);
         promisify(wx.request)({
-            url: `http://localhost:9981/api/getTasksById?task_id=${this.data.taskId}`,
+            url: `${baseUrl}/api/getTasksById?task_id=${this.data.taskId}`,
             method: 'GET'
         }).then(res => {
 
-            console.log('所有数据: ', res.data.data)
             this.setData({
                 filterList: res.data.data[0]
             })
@@ -371,10 +368,8 @@ Page({
 
 
         let thisTask_pid = this.data.filterList.parent_id;  //拿到本条数据的父任务的_id
-
+        console.log("过滤的数据", thisTask_pid)
         //while(this.data.parentId){
-        let that = this;
-
         wx.cloud.callFunction({
             name: 'getParentId',
             data: {
