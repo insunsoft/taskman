@@ -28,7 +28,7 @@ Page({
 		fatherProgress: 0,
 		otherSonProgress: 0,
 		getPTask: {},
-		parent_id_ptask: 'ww',
+		parent_id_ptask: '',
 		isIPX: app.globalData.isIPX,
 		isIPXr: app.globalData.isIPXr,
 		isIPXs: app.globalData.isIPXr, //当前设备是否为 iPhone Xs
@@ -37,49 +37,36 @@ Page({
 		IPAdapt: false,
 		parentId: 'ww'
 	},
-
-	/**
-	 * 生命周期函数--监听页面加载
-	 */
-	onLoad: function(options) {
-		if (app.globalData.userInfo) {
-			this.setData({
-				userInfo: app.globalData.userInfo
-			})
-		}
-		const { isIPX, isIPXr, isIPXs, isIPXsMax } = this.data
-		//适配信息
-		if (isIPX || isIPXr || isIPXs || isIPXsMax) {
-			this.setData({
-				IPAdapt: true
-			})
-		}
-		//console.log("-->",this.data.userInfo)
-		this.setData({
-			taskId: options.id
-		})
-		const db = wx.cloud.database()
-		wx.showShareMenu({
-			withShareTicket: true
-		})
-		this.onAllTasks()
-		//获取openid
-	},
-
 	onAllTasks: function() {
 		const { baseUrl } = this.data
 		// 调用云函数
 		promisify(wx.request)({
-			url: `${baseUrl}/api/getTasksById?task_id=${this.data.taskId}`,
-			method: 'GET'
+			url: `${baseUrl}/api/getTasksById`,
+			data: {
+				task_id: this.data.taskId
+			}
 		}).then(res => {
 			this.setData({
 				filterList: res.data.data[0]
 			})
 			console.log('本条数据', res.data.data[0])
 			// 根据_id查找子任务
-
-			// 查找父节点
+			const _id = this.data.filterList._id
+			promisify(wx.request)({
+				url: `${baseUrl}/api/getSonTaskById`,
+				data: {
+					_id: _id
+				}
+			}).then(res => {
+				const { data: records } = res
+				if (records.code === 200) {
+					this.setData({
+						hasSon: true,
+						sonTasks: records.data
+					})
+				}
+			})
+			// 查找父节任务
 			const parentId = this.data.filterList.parent_id
 			promisify(wx.request)({
 				url: `${baseUrl}/api/getFatherTaskById`,
@@ -87,15 +74,13 @@ Page({
 					parentId: parentId
 				}
 			}).then(res => {
-				const { data } = res.data
-				if (data) {
+				const { data: records } = res
+				if (records.code === 200) {
 					this.setData({
-						fatherTasks: data[0],
+						fatherTasks: records.data[0],
 						hasFather: true
 					})
 				}
-
-				console.log('res: 查找父节点', res)
 			})
 		})
 	},
@@ -110,7 +95,6 @@ Page({
 		})
 	},
 	bindDateChange(e) {
-		console.log('picker发送选择改变，携带值为', e.detail.value)
 		this.setData({
 			date: e.detail.value
 		})
@@ -182,6 +166,30 @@ Page({
 		})
 	},
 	/**
+	 * 生命周期函数--监听页面加载
+	 */
+	onLoad: function(options) {
+		if (app.globalData.userInfo) {
+			this.setData({
+				userInfo: app.globalData.userInfo
+			})
+		}
+		const { isIPX, isIPXr, isIPXs, isIPXsMax } = this.data
+		//适配信息
+		if (isIPX || isIPXr || isIPXs || isIPXsMax) {
+			this.setData({
+				IPAdapt: true
+			})
+		}
+		this.setData({
+			taskId: options.id
+		})
+		wx.showShareMenu({
+			withShareTicket: true
+		})
+		this.onAllTasks()
+	},
+	/**
 	 * 生命周期函数--监听页面初次渲染完成
 	 */
 	onReady: function() {},
@@ -223,7 +231,6 @@ Page({
 		//循环一下
 
 		let thisTask_pid = this.data.filterList.parent_id //拿到本条数据的父任务的_id
-		console.log('过滤的数据', thisTask_pid)
 		//while(this.data.parentId){
 		promisify(wx.request)({
 			url: `${baseUrl}/api/getParentId`,
@@ -315,37 +322,47 @@ Page({
 			formData: formData,
 			filterList: list
 		})
-		// console.log("ss",this.data.formData)
 	},
 	deleteTasks: function() {
-		const { taskId } = this.data
+        const { taskId, baseUrl } = this.data;
 		if (this.data.sonTasks.length === 0) {
 			wx.showModal({
 				title: '提示',
 				content: '确定要删除子任务吗',
-				success: function(res) {
+				success: res => {
 					if (res.confirm) {
-						wx.cloud.callFunction({
-							name: 'deleteTasks',
-							data: {
-								taskId: taskId
-							},
-							success: res => {
-								console.log('返回', res)
-							},
-							fail: err => {
-								console.log('错误返回', err)
-							}
+						promisify(wx.request)({
+							url: `${baseUrl}/api/removeTask`,
+							data: { _id: taskId },
+							method: 'POST'
+						}).then(res => {
+                            const { data: reslut } = res;
+                            console.log('reslut.code', reslut)
+                            if(reslut.code===200){
+                                wx.showToast({
+                                    title: reslut.msg,
+                                    icon: 'success',
+                                    duration: 1000,
+                                })
+                            }else{
+                                wx.showToast({
+                                    title: reslut.msg,
+                                    icon: 'none',
+                                    duration: 2000,
+                                })
+                            }
 						})
 						wx.redirectTo({
 							url: '../index/index'
 						})
-					} else if (res.cancel) {
-						console.log('用户点击取消')
 					}
 				}
 			})
 		} else {
+            wx.showModal({
+                title: '无子任务',
+            })
+			this.setData({ haSonTag: true })
 		}
 	},
 	tasksPrograss: function() {

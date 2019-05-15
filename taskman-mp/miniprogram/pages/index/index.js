@@ -123,7 +123,8 @@ Page({
 							 * 需要优化
 							 */
                             wx.setStorage({
-                                _openid: _openid
+                                key:'_openid',
+                                data: _openid,
                             })
 							// 查询当前openId下的所有小任务
 							promisify(wx.request)({
@@ -211,7 +212,6 @@ Page({
 					this.setData({
 						annexRecord: dateRecSort
 					})
-					console.log('记录', this.data.annexRecord)
 				}
 			})
 	},

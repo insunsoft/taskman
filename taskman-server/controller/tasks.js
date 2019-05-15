@@ -2,7 +2,7 @@
  * @Author: niho xue
  * @LastEditors: niho xue
  * @Date: 2019-04-08 10:27:53
- * @LastEditTime: 2019-05-15 11:52:19
+ * @LastEditTime: 2019-05-15 14:54:42
  */
 const Tasks = require('../db').Tasks;
 
@@ -41,10 +41,7 @@ module.exports = {
     },
     //查询任务
     async getTasks(ctx, next) {
-        //console.log('ctx', ctx)
         let { _openid = '' } = ctx.query;
-        //let res = Tasks.find({_openid: {$gt: _openid}});
-        //console.log('res',res);
         try {
             let res = await Tasks.find({ _openid: _openid });
             ctx.body = {
@@ -63,7 +60,6 @@ module.exports = {
     //按_id查询任务
     async getTasksById(ctx, next) {
         let { task_id = '' } = ctx.query;
-        console.log("id", task_id)
         try {
             let res = await Tasks.find({ _id: task_id });
             ctx.body = {
@@ -84,7 +80,7 @@ module.exports = {
      * @param {ctx} ctx 
      * @param {next} next 
      */
-    async addSonTasks(ctx, next) { /////需要传openId过去
+    async addSonTasks(ctx, next) { //需要传openId过去
         let {   task_name = '',
                 parent_id = '',
                 has_pTasks = true,
@@ -118,19 +114,22 @@ module.exports = {
         }
     },
     /**
-     * 查询当前任务下的子任务数
+     * 查询当前任务下的子任务列表
      */
     async getSonTaskById(ctx, next) {
         let { _id = '' } = ctx.query;
         try {
-            let res = await Tasks.find({ _id: task_id });
+            let res = await Tasks.find({ parent_id: _id });
             ctx.body = {
                 code: 200,
                 msg: '查询成功！',
                 data: res
             }
         } catch (error) {
-
+            ctx.body = {
+                code: 500,
+                msg: error
+            }
         }
     },
 
@@ -151,6 +150,27 @@ module.exports = {
             ctx.body = {
                 code: 500,
                 msg: error
+            }
+        }
+    },
+    /**
+     * 删除当前任务
+     */
+    async removeTask(ctx, next) {
+        let { _id = ''} = ctx.request.body;
+        console.log('删除的: ', _id);
+        try {
+            let res = await Tasks.remove({ _id: _id});
+            ctx.body = {
+                code: 230,
+                msg: '删除成功',
+                data: res,
+            }
+        } catch (error) {
+            ctx.body = {
+                code: 500,
+                msg: error,
+                data: '服务器错误'
             }
         }
     }
