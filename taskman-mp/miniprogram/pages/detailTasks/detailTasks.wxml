@@ -1,13 +1,13 @@
 <!--miniprogram/pages/editTasks/editTasks.wxml-->
 <view wx:if='{{hasFather==true}}'>
         <navigator
-            url="../detailTasks/detailTasks?id={{fatherTasks[0]._id}}"
+            url="../detailTasks/detailTasks?id={{fatherTasks._id}}"
             open-type="redirect"
             >
             <view class="cu-list menu list-menu">
                 <view class="cu-item">
                         <text class='icon-stop text-sm'></text>
-                        <text class='text-grey text-sm'>{{fatherTasks[0].task_name}}</text>
+                        <text class='text-grey text-sm'>{{fatherTasks.task_name}}</text>
                 </view>
             </view>
         </navigator>
@@ -100,25 +100,6 @@
         子任务列表
     </Text>
 </view>
-
-				<!-- 子任务
-<view class="cu-list menu margin-top card-menu">
-        <view class="cu-item arrow">
-          <navigator class='content' url='../sonTasks/sonTasks' open-type="redirect">
-            <text class='icon-form text-cyan'></text>
-            <text class='text-grey'>完成文档撰写</text>
-          </navigator>
-        </view>
-
-        <view class="cu-item arrow">
-          <navigator class='content' url='../sonTasks/sonTasks' open-type="redirect">
-            <text class='icon-form text-cyan'></text>
-            <text class='text-grey'>上传实战代码</text>
-          </navigator>
-        </view>
-</view>
-
--->
 
 				<!-- 判断子任务 -->
 				<view wx:if='{{hasSon==true}}' class='margin'>

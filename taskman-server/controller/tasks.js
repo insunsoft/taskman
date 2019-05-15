@@ -2,7 +2,7 @@
  * @Author: niho xue
  * @LastEditors: niho xue
  * @Date: 2019-04-08 10:27:53
- * @LastEditTime: 2019-05-07 23:29:38
+ * @LastEditTime: 2019-05-15 11:52:19
  */
 const Tasks = require('../db').Tasks;
 
@@ -132,6 +132,26 @@ module.exports = {
         } catch (error) {
 
         }
-    }
+    },
 
+    /**
+     * 查询当前任务下的父任务列表
+     */
+    async getFatherTaskById(ctx, next) {
+        
+        let { parentId = '' } = ctx.query;
+        try {
+            let res = await Tasks.find({ _id: parentId });
+            ctx.body = {
+                code: 200,
+                msg: '查询父任务成功！',
+                data: res
+            }
+        } catch (error) {
+            ctx.body = {
+                code: 500,
+                msg: error
+            }
+        }
+    }
 }
