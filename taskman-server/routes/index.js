@@ -13,5 +13,6 @@ router
 	.post('/api/addSonTask', controller.tasks.addSonTasks)
 	.get('/api/getSonTaskById', controller.tasks.getSonTaskById)
 	.get('/api/getFatherTaskById', controller.tasks.getFatherTaskById)
-	.post('/api/removeTask', controller.tasks.removeTask)
+    .post('/api/removeTask', controller.tasks.removeTask)
+    .post('/api/updateTasks', controller.tasks.updateTasks)
 module.exports = router
