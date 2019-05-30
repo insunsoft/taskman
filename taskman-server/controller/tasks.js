@@ -2,7 +2,7 @@
  * @Author: niho xue
  * @LastEditors: niho xue
  * @Date: 2019-04-08 10:27:53
- * @LastEditTime: 2019-05-15 23:36:55
+ * @LastEditTime: 2019-05-30 14:53:00
  */
 const Tasks = require('../db').Tasks
 
@@ -200,41 +200,38 @@ module.exports = {
 	 * 查找父任务
 	 */
 	async updateTasks(ctx, next) {
-		let { thisTask_pid = '', formData = [], _id = '' } = ctx.request.body
-		console.log('thisTask_pid: ', thisTask_pid)
+        let { thisTask_pid = '', formData = [], _id = '' } = ctx.request.body
 		try {
-            if(thisTask_pid!==''){
-                let res = await Tasks.find({ _id: thisTask_pid })  //----->_id不许为空
-                let process = 0
-                if (res.length !== 0) {
-                    const parentId = res[0]._id
-                    let allSonTasks = await Tasks.find({ parent_id: parentId }) // 查出所有子节点
-                    console.log('allSonTasks: ', allSonTasks)
-    
-                    for (item in allSonTasks) {
-                        process = process + item.task_progress
-                    }
-                    process = process.toFixed(10) / allSonTasks.length
-                    console.log('process: ===>', process)
-                }
-            }
-			
-			// 注意要更新数据
-			let updateRes = await Tasks.findOneAndUpdate(
-				{ _id: _id },
-				{ ...formData }
+            // if(thisTask_pid!==''){
+            //     let res = await Tasks.find({ _id: thisTask_pid })  //----->_id不许为空
+            //     let process = 0;
+            //     if (res.length !== 0) {
+            //         const parentId = res[0]._id;
+            //         console.log('parentId: ', parentId);
+            //         //let allSonTasks = await Tasks.find({ parent_id: parentId }) // 查出所有子节点
+            //         console.log('allSonTasks....',allSonTasks);
+            //         allSonTasks.map(item=>{
+            //             process = process + item.task_progress
+            //         })
+            //         process = process.toFixed(1) / allSonTasks.length //存为父任务的进度
+            //     }
+            // }
+			//注意要更新数据
+			let updateRes = await Tasks.updateOne(
+				{ '_id': _id },
+                { $set: {...formData} },
+                {'upsert':true}
 			)
-			console.log('updateRes: ', updateRes)
-
 			// 更新出错！！！！！
 			ctx.body = {
 				code: 200,
 				msg: '成功',
-				data: process
+				data: updateRes
 			}
 		} catch (error) {
+            console.log('ssss',error)
 			ctx.body = {
-				code: 200,
+				code: 500,
 				msg: '失败',
 				data: error
 			}

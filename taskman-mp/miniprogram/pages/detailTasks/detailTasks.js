@@ -35,7 +35,8 @@ Page({
 		isIPXsMax: app.globalData.isIPXr,
 		baseUrl: app.globalData.baseUrl,
 		IPAdapt: false,
-		parentId: 'ww'
+        parentId: 'ww',
+        task_date:'',
 	},
 	onAllTasks: function() {
 		const { baseUrl } = this.data
@@ -213,12 +214,14 @@ Page({
 		})
 	},
 	formSubmitDetail: function(e) {
+        const { baseUrl } = this.data;
 		wx.showToast({
 			title: '你点击了完成'
 		})
 		const formDataT = e.detail.value
 		let time = this.data.task_date
-		formDataT.task_time = time //换名字存入数据库
+        formDataT.task_time = time //换名字存入数据库
+        console.log('formDataT.task_time',formDataT.task_time)
 		formDataT.task_progress = formDataT.task_progress / 100
 		this.setData({
 			formData: { ...this.data.formData, ...formDataT }
@@ -230,29 +233,20 @@ Page({
 		//根据其parentId查出它父任务的_id,再根据_id查出所有子节点并计算进度值
 		//循环一下
 
-		let thisTask_pid = this.data.filterList.parent_id //拿到本条数据的父任务的_id
+        let thisTask_pid = this.data.filterList.parent_id || ''  //拿到本条数据的父任务的_id
+        console.log("thisTask_pid", thisTask_pid)
 		//while(this.data.parentId){
 		promisify(wx.request)({
-			url: `${baseUrl}/api/getParentId`,
-			method: 'POST',
+			url: `${baseUrl}/api/updateTasks`,
 			data: {
 				thisTask_pid: thisTask_pid,
 				filterList_id: this.data.filterList._id,
-				formData: this.data.formData
-			}
+                formData: this.data.formData,
+                _id: this.data.taskId,
+            },
+            method: 'POST',
 		}).then(res => {
-			console.log('getParentId', res)
-			this.setData({
-				parentId: res.result.getPTask.parent_id || ''
-			})
-
-			wx.cloud.callFunction({
-				name: 'updateFatherProgress',
-				data: {
-					parent_id: thisTask_pid,
-					fatherProgress: res.result.fatherProgress
-				}
-			})
+            console.log('res: ', res);
 		})
 		console.log('===>', this.data.parent_id)
 		//延时加载访问数据库
@@ -337,7 +331,6 @@ Page({
 							method: 'POST'
 						}).then(res => {
                             const { data: reslut } = res;
-                            console.log('reslut.code', reslut)
                             if(reslut.code===200){
                                 wx.showToast({
                                     title: reslut.msg,

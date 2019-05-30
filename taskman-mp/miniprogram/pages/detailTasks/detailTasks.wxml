@@ -38,11 +38,8 @@
 		<view class="cu-bar bg-white solid-bottom">
 			<view class="cu-bar justify-center bg-white">
 				<view class='action sub-title'>
-					<text class='text-lg text-bold text-black'>任务详情
-</text>
+					<text class='text-lg text-bold text-black'>任务详情</text>
 					<text class='bg-white' style='width:3rem'/>
-
-
             </view>
 			</view>
 		</view>
@@ -64,12 +61,12 @@
             <view class="cu-form-group">
                     <picker
                     mode="date"
-                    value="{{task_date}}"
+                    value="{{filterList.task_time}}"
                     bindchange="bindDateChange"
                     style="margin-left: 10rpx;"
                     >
                         <view class="picker text-xl text-black">
-                            {{task_date?task_date:'请选择'}}
+                            {{filterList.task_time?filterList.task_time:'请选择'}}
                         </view>
                     </picker>
 		       </view>

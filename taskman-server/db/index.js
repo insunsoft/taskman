@@ -2,7 +2,7 @@
  * @Author: liho xue
  * @LastEditors: niho xue
  * @since: 2019-04-03 17:09:46
- * @LastEditTime: 2019-05-15 18:33:45
+ * @LastEditTime: 2019-05-30 15:00:36
  */
 const mongoose = require('mongoose');
 const db = mongoose.connect("mongodb://localhost:27017/test", { useNewUrlParser: true }, function (err) {
@@ -28,7 +28,7 @@ let TaskSchema = new Schema({
     task_details: String,
     task_name: String,
     task_progress: Number,
-    task_time: Date,
+    task_time: String,
     parent_id: String,
 })
 
