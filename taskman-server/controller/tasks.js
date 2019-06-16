@@ -2,7 +2,7 @@
  * @Author: niho xue
  * @LastEditors: niho xue
  * @Date: 2019-04-08 10:27:53
- * @LastEditTime: 2019-05-30 14:53:00
+ * @LastEditTime: 2019-06-16 21:34:04
  */
 const Tasks = require('../db').Tasks
 
@@ -10,6 +10,7 @@ module.exports = {
 	//新增任务
 	async addTasks(ctx, next) {
 		let {
+			a = '',
 			task_name = '',
 			has_pTasks = false,
 			has_tasks = false,
@@ -200,28 +201,43 @@ module.exports = {
 	 * 查找父任务
 	 */
 	async updateTasks(ctx, next) {
-        let { thisTask_pid = '', formData = [], _id = '' } = ctx.request.body
+		let { thisTask_pid = '', formData = [], _id = '' } = ctx.request.body
+		console.log('thisTask_pid: ', thisTask_pid)
+		let currentProgress = formData.task_progress // 当前任务的进度
+		let process = 0
 		try {
-            // if(thisTask_pid!==''){
-            //     let res = await Tasks.find({ _id: thisTask_pid })  //----->_id不许为空
-            //     let process = 0;
-            //     if (res.length !== 0) {
-            //         const parentId = res[0]._id;
-            //         console.log('parentId: ', parentId);
-            //         //let allSonTasks = await Tasks.find({ parent_id: parentId }) // 查出所有子节点
-            //         console.log('allSonTasks....',allSonTasks);
-            //         allSonTasks.map(item=>{
-            //             process = process + item.task_progress
-            //         })
-            //         process = process.toFixed(1) / allSonTasks.length //存为父任务的进度
-            //     }
-            // }
+			if (thisTask_pid !== '') {
+				let res = await Tasks.find({ _id: thisTask_pid }) //----->_id不许为空
+				if (res.length !== 0) {
+					const parentId = res[0]._id
+					console.log('parentId: ', parentId)
+					let allSonTasks = await Tasks.find({ parent_id: parentId }) // 查出所有子节点
+					console.log('allSonTasks....', allSonTasks)
+					allSonTasks
+						.filter(item => item._id.toString() !== _id)
+						.map(item => {
+							process = process + item.task_progress // 计算其他任务的进度值
+						})
+					console.log('process: ', process)
+					process = (process + currentProgress).toFixed(1) / allSonTasks.length //存为父任务的进度
+				}
+			}
 			//注意要更新数据
 			let updateRes = await Tasks.updateOne(
-				{ '_id': _id },
-                { $set: {...formData} },
-                {'upsert':true}
+				{ _id: _id },
+				{ $set: { ...formData } },
+				{ upsert: true }
 			)
+			console.log('updateRes', updateRes)
+
+			// 更新父任务的进度值
+			console.log('process: ', process)
+			let updateFathertask = await Tasks.updateOne(
+				{ _id: thisTask_pid },
+				{ $set: { task_progress: process } },
+				{ upsert: true }
+			)
+			console.log('updateFathertask', updateFathertask)
 			// 更新出错！！！！！
 			ctx.body = {
 				code: 200,
@@ -229,7 +245,7 @@ module.exports = {
 				data: updateRes
 			}
 		} catch (error) {
-            console.log('ssss',error)
+			console.log('ssss', error)
 			ctx.body = {
 				code: 500,
 				msg: '失败',

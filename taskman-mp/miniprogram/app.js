@@ -19,8 +19,9 @@ App({
     isIPXr: false, //当前设备是否为 iPhone Xr
     isIPXsMax: false, //当前设备是否为 iPhone XsMax
     isIOS: false,
-    baseUrl: 'http://localhost:9981',
-    _openid: ''
+    _openid: '',
+    baseUrl: 'http://localhost:9981', // 本地调试
+    // baseUrl: 'https://task.xueshiming.cn', // 线上版本
   },
   
   checkIsIPhoneXOrMaxOrXr: function() {
@@ -28,7 +29,6 @@ App({
     wx.getSystemInfo({
       success: function (res) {
         // 根据 model 进行判断
-        console.log('res',res)
         if (res.model.search('iPhone X') != -1) {
           self.globalData.isIPX = true
         }
