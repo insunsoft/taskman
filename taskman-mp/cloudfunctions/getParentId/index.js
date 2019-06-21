@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
         }).get().then((res) => {
             console.log('异步结果', res)
             getPTask = res.data[0],
-                parent_id_ptask = res.data[0]._id || ''//拿到父任务的id
+                parent_id_ptask = res.data[0]._id || '' //拿到父任务的id
             //需要处理reject
             return parent_id_ptask;
         }).then((parent_id_ptask) => {
@@ -30,22 +30,20 @@ exports.main = async (event, context) => {
                 parent_id: _.eq(parent_id_ptask)
             }).get().then((res) => {
                 allTasksByOnePid = res.data;
-                console.log("所有子任务", allTasksByOnePid)
                 //剔除本条数据
                 allTasksByOnePid.length !== 0 && allTasksByOnePid.map(item => {
-                    console.log("每一项的进度", item.task_progress)
-                    console.log("filterList_id", filterList_id)
                     if (item._id !== filterList_id) {
                         otherSonProgress = item.task_progress + otherSonProgress;
                     }
                 })
 
                 if (allTasksByOnePid.length !== 0) {
-                    console.log('当前任务进度', event.formData.task_progress)
-                    console.log('其他进度', otherSonProgress)
                     fatherProgress = ((otherSonProgress + event.formData.task_progress).toFixed(10)) / allTasksByOnePid.length
                 }
-                resolve({ fatherProgress, getPTask });
+                resolve({
+                    fatherProgress,
+                    getPTask
+                });
             })
         })
     })

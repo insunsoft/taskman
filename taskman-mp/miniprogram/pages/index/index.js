@@ -31,22 +31,22 @@ Page({
             fileStyle: fileStyle
         })
     },
-    addTask: function() {
+    addTask: function () {
         this.setData({
             modalShow: true
         })
     },
-    addTaskCancel: function() {
+    addTaskCancel: function () {
         this.setData({
             modalShow: false
         })
     },
-    itemClick: function() {
+    itemClick: function () {
         wx.navigateTo({
             url: '../detailTasks/detailTasks'
         })
     },
-    formSubmit: function(e) {
+    formSubmit: function (e) {
         const {
             baseUrl
         } = this.data;
@@ -90,12 +90,12 @@ Page({
             modalShow: false
         })
     },
-    addTaskX: function() {
+    addTaskX: function () {
         this.setData({
             modalShow: false
         })
     },
-    onLoad: function() {
+    onLoad: function () {
         const date = new Date()
         const currDate = date.toLocaleDateString()
         const {
@@ -226,10 +226,10 @@ Page({
                 }
             })
     },
-    add0: function(m) {
+    add0: function (m) {
         return m < 10 ? '0' + m : m
     },
-    onGetUserInfo: function(e) {
+    onGetUserInfo: function (e) {
         if (!this.logged && e.detail.userInfo) {
             this.setData({
                 logged: true,
@@ -238,7 +238,7 @@ Page({
             })
         }
     },
-    openDocument: function(e) {
+    openDocument: function (e) {
         const dUrl = e.currentTarget.dataset.durl
         wx.downloadFile({
             // 示例 url，并非真实存在

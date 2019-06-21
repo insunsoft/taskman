@@ -8,26 +8,20 @@ const _ = db.command;
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  console.log('event-->', event)
-  console.log('context-->', context)
 
-  try {
-    return await db.collection('tasks-list').where({
-      _id: event.taskId
-    })
-      .update({
-        data: {
-            son_Tasks_Count: _.inc(1)
-        },
-        success: res => {
-          console.log('res', res)
-        },
-        fail: err => {
-          console.log('err', err)
-        }
-      })
-  } catch (e) {
-    console.error(e)
+    try {
+        return await db.collection('tasks-list').where({
+                _id: event.taskId
+            })
+            .update({
+                data: {
+                    son_Tasks_Count: _.inc(1)
+                },
+                success: res => {},
+                fail: err => {}
+            })
+    } catch (e) {
+        console.error(e)
 
-  }
+    }
 }

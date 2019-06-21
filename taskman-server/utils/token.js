@@ -2,18 +2,25 @@
  * @Author: niho xue
  * @LastEditors: niho xue
  * @Date: 2019-04-04 17:44:17
- * @LastEditTime: 2019-05-04 12:31:34
+ * @LastEditTime: 2019-06-21 15:17:04
  */
 
 const jwt = require('jsonwebtoken');
-const { TOKEN_ENCODE_STR, URL_YES_PASS } = require('./config');
+const {
+    TOKEN_ENCODE_STR,
+    URL_YES_PASS
+} = require('./config');
 const Checkcode = require('../db').Checkcode;
 const User = require('../db').User
 
 module.exports = {
     // 生成登录 token
     create_token(str) {
-        return jwt.sign({ str }, TOKEN_ENCODE_STR, { expiresIn: '1h' });
+        return jwt.sign({
+            str
+        }, TOKEN_ENCODE_STR, {
+            expiresIn: '1h'
+        });
     },
     /*  
       验证登录 token 是否正确  => 写成中间件
@@ -31,9 +38,14 @@ module.exports = {
             }
             try {
                 // 验证token是否过期
-                let { str = "" } = await jwt.verify(token, TOKEN_ENCODE_STR);
+                let {
+                    str = ""
+                } = await jwt.verify(token, TOKEN_ENCODE_STR);
                 // 验证token与账号是否匹配
-                let res = await User.find({ user_id: str, token });
+                let res = await User.find({
+                    user_id: str,
+                    token
+                });
                 if (res.length == 0) {
                     ctx.response.status = 401;
                     ctx.response.body = "登录过期，请重新登录!";
@@ -50,13 +62,19 @@ module.exports = {
         await next();
     },
     // 验证 验证码 token 与 code 是否正确
-    async check_token_code({ token, code }) {
+    async check_token_code({
+        token,
+        code
+    }) {
         try {
             // 验证码转大写
             code = code.toUpperCase();
             await jwt.verify(token, TOKEN_ENCODE_STR);
             // 读数据库，删除验证码
-            let res = await Checkcode.findOneAndDelete({ token, code });
+            let res = await Checkcode.findOneAndDelete({
+                token,
+                code
+            });
             if (res == null) {
                 return false;
             }

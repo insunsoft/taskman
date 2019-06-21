@@ -1,13 +1,21 @@
 {
     "version": "0.2.0",
     "configurations": [
-
+        
         {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/taskman-server/bin/server.js"
-        }
+            "program": "${workspaceFolder}/taskman-server/bin/server.js",
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Launch Program",
+            "address": "localhost",
+            "port": 9981
+        },
+        
     ]
   }
   

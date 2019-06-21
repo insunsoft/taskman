@@ -5,35 +5,31 @@ const db = cloud.database()
 const _ = db.command;
 const MAX_LIMIT = 100
 exports.main = async (event, context) => {
-    console.log("---->event",event)
-  // 先取出集合记录总数
-  const countResult = await db.collection('tasks-list').count()
-  const total = countResult.total
-  // 计算需分几次取
-  const batchTimes = Math.ceil(total / 100)
-  // 承载所有读操作的 promise 的数组
-  const tasks = []
-  for (let i = 0; i < batchTimes; i++) {
-    const promise = db.collection('tasks-list').skip(i * MAX_LIMIT).limit(MAX_LIMIT).where(_.or([
-        {
-            task_sender: _.eq(event._openid)
-        },
-        {
-            task_receive: _.eq(event._openid)
-        },
-        {
-            _openid: _.eq(event._openid)
-        }
-    ])).get({
-        success(res) {
-          console.log(res.data)
-        }
-      })
-    tasks.push(promise)
-  }
-  // 等待所有
-  return (await Promise.all(tasks)).reduce((acc, cur) => ({
-    data: acc.data.concat(cur.data),
-    errMsg: acc.errMsg,
-  }))
+    // 先取出集合记录总数
+    const countResult = await db.collection('tasks-list').count()
+    const total = countResult.total
+    // 计算需分几次取
+    const batchTimes = Math.ceil(total / 100)
+    // 承载所有读操作的 promise 的数组
+    const tasks = []
+    for (let i = 0; i < batchTimes; i++) {
+        const promise = db.collection('tasks-list').skip(i * MAX_LIMIT).limit(MAX_LIMIT).where(_.or([{
+                task_sender: _.eq(event._openid)
+            },
+            {
+                task_receive: _.eq(event._openid)
+            },
+            {
+                _openid: _.eq(event._openid)
+            }
+        ])).get({
+            success(res) {}
+        })
+        tasks.push(promise)
+    }
+    // 等待所有
+    return (await Promise.all(tasks)).reduce((acc, cur) => ({
+        data: acc.data.concat(cur.data),
+        errMsg: acc.errMsg,
+    }))
 }

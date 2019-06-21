@@ -46,7 +46,9 @@ page {
     height: 130rpx;
 }
 
-.userinfo, .uploader, .tunnel {
+.userinfo,
+.uploader,
+.tunnel {
     margin-top: 40rpx;
     height: 140rpx;
     width: 100%;
@@ -84,7 +86,8 @@ page {
     border: none;
 }
 
-.uploader, .tunnel {
+.uploader,
+.tunnel {
     height: auto;
     padding: 0 0 0 40rpx;
     flex-direction: column;
@@ -92,7 +95,8 @@ page {
     box-sizing: border-box;
 }
 
-.uploader-text, .tunnel-text {
+.uploader-text,
+.tunnel-text {
     width: 100%;
     line-height: 52px;
     font-size: 34rpx;

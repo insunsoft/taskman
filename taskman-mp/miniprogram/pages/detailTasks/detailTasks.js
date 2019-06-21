@@ -38,7 +38,7 @@ Page({
         parentId: 'ww',
         task_date: '',
     },
-    onAllTasks: function() {
+    onAllTasks: function () {
         const {
             baseUrl
         } = this.data
@@ -106,7 +106,7 @@ Page({
             date: e.detail.value
         })
     },
-    formSubmitSonTask: function(e) {
+    formSubmitSonTask: function (e) {
         const {
             baseUrl
         } = this.data
@@ -161,12 +161,12 @@ Page({
             })
         }
     },
-    addTaskCancel: function() {
+    addTaskCancel: function () {
         this.setData({
             closeModalShow: false
         })
     },
-    addTaskX: function() {
+    addTaskX: function () {
         this.setData({
             closeModalShow: false
         })
@@ -179,7 +179,7 @@ Page({
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function(options) {
+    onLoad: function (options) {
         if (app.globalData.userInfo) {
             this.setData({
                 userInfo: app.globalData.userInfo
@@ -208,18 +208,18 @@ Page({
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
-    onReady: function() {},
+    onReady: function () {},
 
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function() {},
+    onShow: function () {},
 
-    closeTask: function() {
+    closeTask: function () {
         wx.showModal({
             title: '提示',
             content: '确定删除吗',
-            success: function(res) {
+            success: function (res) {
                 if (res.confirm) {
                     console.log('用户点击确定')
                 } else if (res.cancel) {
@@ -228,7 +228,7 @@ Page({
             }
         })
     },
-    formSubmitDetail: function(e) {
+    formSubmitDetail: function (e) {
         const {
             baseUrl
         } = this.data;
@@ -241,7 +241,8 @@ Page({
         console.log('formDataT.task_time', formDataT.task_time)
         formDataT.task_progress = formDataT.task_progress / 100
         this.setData({
-            formData: { ...this.data.formData,
+            formData: {
+                ...this.data.formData,
                 ...formDataT
             }
         })
@@ -260,6 +261,7 @@ Page({
             data: {
                 thisTask_pid: thisTask_pid,
                 filterList_id: this.data.filterList._id,
+                has_pTasks: this.data.filterList.has_pTasks,
                 formData: this.data.formData,
                 _id: this.data.taskId,
             },
@@ -279,12 +281,12 @@ Page({
             complete: () => {}
         })
     },
-    getParentId: function(thisTask_pid) {
+    getParentId: function (thisTask_pid) {
         const db = wx.cloud.database()
         const _ = db.command
         let that = this
 
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             db.collection('tasks-list')
                 .where({
                     _id: _.eq(thisTask_pid)
@@ -305,12 +307,12 @@ Page({
                 })
         })
     },
-    addSonTasks: function() {
+    addSonTasks: function () {
         this.setData({
             closeModalShow: true
         })
     },
-    sliderChange: function(e) {
+    sliderChange: function (e) {
         const {
             formData
         } = this.data
@@ -324,7 +326,7 @@ Page({
             filterList: list
         })
     },
-    deleteTasks: function() {
+    deleteTasks: function () {
         const {
             taskId,
             baseUrl
@@ -374,7 +376,7 @@ Page({
             })
         }
     },
-    tasksPrograss: function() {
+    tasksPrograss: function () {
         this.setData({
             sliderEdit: false
         })
@@ -386,33 +388,33 @@ Page({
     /**
      * 生命周期函数--监听页面隐藏
      */
-    onHide: function() {},
+    onHide: function () {},
 
     /**
      * 生命周期函数--监听页面卸载
      */
-    onUnload: function() {},
+    onUnload: function () {},
 
     /**
      * 页面相关事件处理函数--监听用户下拉动作
      */
-    onPullDownRefresh: function() {},
+    onPullDownRefresh: function () {},
 
     /**
      * 页面上拉触底事件的处理函数
      */
-    onReachBottom: function() {},
-    inviteFriends: function() {
+    onReachBottom: function () {},
+    inviteFriends: function () {
         this.setData({
             inviteModal: true
         })
     },
-    hideInviteModal: function() {
+    hideInviteModal: function () {
         this.setData({
             inviteModal: false
         })
     },
-    inviteFriendBtn: function() {
+    inviteFriendBtn: function () {
         this.setData({
             inviteModal: false
         })
@@ -420,7 +422,7 @@ Page({
     /**
      * 用户点击按钮分享
      */
-    onShareAppMessage: function(res, options) {
+    onShareAppMessage: function (res, options) {
         console.log('id', this.data.taskId)
 
         if (res.from === 'button') {
@@ -432,14 +434,14 @@ Page({
             path: `pages/inviteFren/inviteFren?task_id=${
 				this.data.taskId
 			}&task_sender=${this.data.openId}`,
-            success: function(res) {
+            success: function (res) {
                 var shareTickets = res.shareTickets
                 if (shareTickets.length == 0) {
                     return false
                 }
                 wx.getShareInfo({
                     shareTicket: shareTickets[0],
-                    success: function(res) {
+                    success: function (res) {
                         var encryptedData = res.encryptedData
                         var iv = res.iv
                         console.log('res', res)
@@ -447,7 +449,7 @@ Page({
                 })
                 console.log('转发成功')
             },
-            fail: function(res) {
+            fail: function (res) {
                 // 转发失败
                 console.log('转发失败')
             }
